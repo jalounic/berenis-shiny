@@ -5,19 +5,6 @@
 server <- function(input, output, session) {
   
   session$onSessionEnded(stopApp)
-  
-  #bs_themer()
-  
-  # Translator as a reactive version that reacts to changes of the language.
-  # see: https://github.com/Appsilon/shiny.i18n/blob/master/examples/live_language_change/browser_app.R
-  # observeEvent(input$selected_language, {
-  #   # This print is just for demonstration
-  #   print(paste("Language change!", input$selected_language))
-  #   # Here is where we update language in session
-  #   shiny.i18n::update_lang(session, input$selected_language)
-  # })
-  # 
-  
 
   ########## Function Definitions ##########
 
@@ -43,18 +30,6 @@ server <- function(input, output, session) {
     return(txt)
   }
   
-  # getNLDLtext<- function(df, varName){ 
-  #   
-  #   # get row for the selected item
-  #   detailsRow <- as.numeric(str_split(input$selected_buttonDLNL, "_")[[1]][2])
-  #   
-  #   # find value 
-  #   txt <- df[detailsRow, varName]
-  #   
-  #   return(txt)
-  # }
-  
-  
   translate_categories <- function(cats_df, catName_DE, catLookupVals_DE, lang = "DE"){
     
     # catch empty lookups
@@ -75,7 +50,6 @@ server <- function(input, output, session) {
     return(res)
     
   } 
-  
   
   translate_manually <- function(activeLang, entxt, detxt=NULL, frtxt=NULL) {
     
@@ -99,36 +73,6 @@ server <- function(input, output, session) {
     }
   }
   
-
-
-  # observeEvent(input$langPicker, {
-  #   
-  #   if (input$langPicker == "EN") {
-  #     return(entxt)
-  #     
-  #   } else if (input$langPicker == "DE") {
-  #     if (is.NULL(detxt)) {return(entxt)} else {return(detxt)}
-  #     
-  #   } else if (input$langPicker == "FR") {
-  #     if (is.NULL(frtxt)) {return(entxt)} else {return(frtxt)}
-  #     
-  #   } else {
-  #     return(NULL)
-  #   }
-  # })
-  
-  
-  # ########## Browser Navigation ########## 
-  
-  # source 1 : https://github.com/judytlewis/shiny-browser-nav/blob/master/app.R
-  # source 2 : https://github.com/daattali/advanced-shiny/tree/master/navigate-history
-  
-  # ... not implemented yet ...
-  
-
-  
-  
-
   ########## Reactive Variables ##########
   
   # -------- ** Shinyjs onclick Event - make BERENIS-Logo to "home button" -------- 
@@ -234,20 +178,6 @@ server <- function(input, output, session) {
     
     # create download links and download-button form the URLs
     data$NL_DL_link <- (sapply(data[, paste0(input$langPicker, "_url")], createLink, buttonTxt=""))
-      
-    # data$NL_DL_link <- buttonInput(
-    #   FUN = actionButton,
-    #   len = nrow(data),
-    #   id = 'buttonDLNL_',
-    #   label = "",
-    #   icon = icon("download", style="font-size: 18px;"),
-    #   #href = createLink(data[, paste0(input$langPicker, "_url")], buttonTxt=""),
-    #   #href = createLink(data[, "DE_url"], buttonTxt=""),
-    #   #icon = tags$i(class = "glyphicon glyphicon-list", style="font-size: 18px;"),
-    #   # onclick = 'Shiny.setInputValue(\"selected_buttonDLNL\",  this.id)'
-    #   # onclick = 'Shiny.setInputValue("current_id", clicked_id, {priority: "event"})'
-    #   onclick = 'Shiny.setInputValue(\"selected_buttonDLNL\",  this.id.concat(\"_\", Math.random()))' # https://stackoverflow.com/questions/63042200/action-button-in-table-does-not-respond-if-i-click-twice-in-a-row-on-the-same-on
-    # )
 
     # create title and summary according to selected language
     data$title_byLang <- data[, paste0(input$langPicker, "_title")]
@@ -285,123 +215,6 @@ server <- function(input, output, session) {
     # output$selectedLanguage <- renderUI({return(input$langPicker)})
     
   })
-
-  # window_height <- reactive({
-  #   shinybrowser::get_height()
-  # })
-  # window_width <- reactive({
-  #   shinybrowser::get_width()
-  # })
-  # 
-  # observeEvent(window_height, {
-  #   showNotification(window_height)
-  # })
-  # observeEvent(window_width, {
-  #   showNotification(window_width)
-  # })
-  
-  
-  # -------- ** Events - Testing serveral Download Handler for the Newsletter Download  --------
-  
-  # DLNL_buttonID <- reactive(input$selected_buttonDLNL)
-  # # create the url while considering the selected language
-  # NL_url <- reactive(getNLDLtext(filteredData(), paste0(input$langPicker, "_url")))
-  # # DL_filename <- paste0("BERENIS_Newsletter_", getNLDLtext(filteredData(), "NL_issue") , "_", input$langPicker, ".pdf")
-  # 
-  # # further reading: https://stackoverflow.com/questions/57973357/how-to-use-downloadhandler-for-the-download-button-create-inside-shiny-datatable
-  # observeEvent(input$selected_buttonDLNL, {
-  #   
-  #   # controlling - temporary
-  #   print(input$selected_buttonDLNL)
-  #   print(DLNL_buttonID())
-  # 
-  #   # retrieve selected row from the button's name
-  #   selectedRow <- as.numeric(str_split(input$selected_buttonDLNL, "_")[[1]][2])
-  # 
-  #   # controlling - temporary
-  #   print(getNLDLtext(filteredData(),"NL_DL_link"))
-  #   # cat(NL_url)
-  #   showNotification(input$selected_buttonDLNL)
-  # 
-  # })
-  # 
-  # # create output with downloadHandler
-  # 
-  # eventReactive(input$selected_buttonDLNL, {
-  # output[["selected_buttonDLNL_98"]] <- downloadHandler(
-  # 
-  #   filename = function(){
-  #     # paste0("BERENIS_Newsletter_", getNLDLtext(filteredData(), "NL_issue") , "-", input$langPicker, ".pdf")
-  #     paste0("BERENIS_Newsletter_", "18" , "___", input$langPicker, ".pdf")
-  #     # paste0("BERENIS_Newsletter_", input$langPicker, ".pdf")
-  #   },
-  # 
-  #   content = function(file){
-  #     # httr::GET(NL_url(), httr::write_disk(file))
-  #     httr::GET("https://www.bafu.admin.ch/dam/bafu/de/dokumente/elektrosmog/fachinfo-daten/newsletter-berenis-nr-27-dezember.pdf.download.pdf/Newsletter%20BERENIS%20Nr.%2027%20-%20Dezember%202021.pdf", httr::write_disk(file), progress())
-  #   }
-  # )
-  # })
-  
-  # nr <- reactive(nrow(filteredData()))
-  # 
-  # lapply(1:nr, function(i){
-  #   
-  #   print(i)
-  #   
-  #   output[[paste0("buttonDLNL_",i)]] <<- downloadHandler(
-  #     
-  #     filename = function(){
-  #       # paste0("BERENIS_Newsletter_", getNLDLtext(filteredData(), "NL_issue") , "-", input$langPicker, ".pdf")
-  #       paste0("BERENIS_Newsletter_", "18" , "___", input$langPicker, ".pdf")
-  #       # paste0("BERENIS_Newsletter_", input$langPicker, ".pdf")
-  #     },
-  #     
-  #     content = function(file){
-  #       # httr::GET(NL_url(), httr::write_disk(file))
-  #       httr::GET("https://www.bafu.admin.ch/dam/bafu/de/dokumente/elektrosmog/fachinfo-daten/newsletter-berenis-nr-27-dezember.pdf.download.pdf/Newsletter%20BERENIS%20Nr.%2027%20-%20Dezember%202021.pdf", httr::write_disk(file))
-  #     }
-  #   )
-  #   
-  # })
-  
-  
-  # # create the url while considering the selected language
-  # NL_url <- reactive(getNLDLtext(filteredData(), paste0(input$langPicker, "_url")))
-  # DL_filename <- reactive(paste0("BERENIS_Newsletter_", getNLDLtext(filteredData(), "NL_issue") , "_", input$langPicker, ".pdf"))
-  
-  # output[["DL_TestButton"]] <- downloadHandler(
-  #   
-  #   filename = function(){paste0("BERENIS_Newsletter_", "18" , "___", input$langPicker, ".pdf")},
-  # 
-  #     # paste0("BERENIS_Newsletter_", input$langPicker, ".pdf")
-  # 
-  #   
-  #   content = function(file){
-  #     #file.copy("www/BERENIS_logo_blau.png", file)
-  #     
-  #     httr::GET("https://www.bafu.admin.ch/dam/bafu/de/dokumente/elektrosmog/fachinfo-daten/newsletter-berenis-nr-27-dezember.pdf.download.pdf/Newsletter%20BERENIS%20Nr.%2027%20-%20Dezember%202021.pdf", httr::write_disk(file), progress())
-  #   }
-  # )
-
-  
-    # create output with downloadHandler
-  # observeEvent(input$selected_buttonDLNL, {
-  #   
-  #   print(input$selected_buttonDLNL)
-  #   
-  #   output[[input$selected_buttonDLNL]] <- downloadHandler(
-  #     
-  #     filename = function(){
-  #       paste0("BERENIS_Newsletter-", getNLDLtext(filteredData(), "NL_issue") , "-", input$langPicker, ".pdf")
-  #     },
-  #     
-  #     content  = function(file){
-  #       GET(getNLDLtext(filteredData(), paste0(input$langPicker, "_url")), write_disk(file))
-  #     }
-  #   )
-  # })
-  
 
   # -------- ** Event - Details Button --------
   
@@ -480,47 +293,6 @@ server <- function(input, output, session) {
                                   textOutput("txt_duration", inline = TRUE),
                                   br(),
                                 )
-                                
-                                # # temporary Input well panel
-                                # wellPanel(
-                                #   h4(i18n$t("Study Characteristics"), style ="font-weight: bold;"),
-                                #   
-                                #   h4("Einfache Suche", style ="font-weight: bold;"),
-                                # 
-                                #   #span(paste0(i18n$t("Study Type"),":"), style ="font-weight: bold;"), textOutput("txt_studyTypeSimple", inline = TRUE),
-                                #   selectInput("inputStudyType", i18n$t("Study Type"),
-                                #               choices = c(NA, berenis_cats$Studientyp_simple[!is.na(berenis_cats$Studientyp_simple)]),
-                                #               selected = getDetailsText(filteredData(), "cat_studyTypeSimple")),
-                                # 
-                                #   selectInput("inputFreqRangeSimple", i18n$t("Frequency Range"),
-                                #               choices = c(NA, berenis_cats$Frequenzbereich_simple[!is.na(berenis_cats$Frequenzbereich_simple)]),
-                                #               selected = getDetailsText(filteredData(), "cat_freqRangeSimple")),
-                                #   
-                                #   h4("Detaillierte Suche", style ="font-weight: bold;"), 
-                                #   
-                                #   selectInput("inputFreqRange", i18n$t("Frequency Range"),
-                                #               choices = c(NA, berenis_cats$Frequenzbereich[!is.na(berenis_cats$Frequenzbereich)]),
-                                #               selected = getDetailsText(filteredData(), "cat_freqRange")),
-                                #   
-                                #   selectInput("inputSourceType", i18n$t("Source"),
-                                #               choices = c(NA, berenis_cats$Quelle[!is.na(berenis_cats$Quelle)]),
-                                #               selected = getDetailsText(filteredData(), "cat_source")),
-                                #   
-                                #   selectInput("inputStudyObject", i18n$t("Study Object"),
-                                #               choices = c(NA, berenis_cats$Untersuchungsobjekt[!is.na(berenis_cats$Untersuchungsobjekt)]),
-                                #               selected = getDetailsText(filteredData(), "cat_studyObject")),
-                                #   
-                                #   selectInput("inputTargetDimension", i18n$t("Target Dimension"),
-                                #               choices = c(NA, berenis_cats$Zielgroesse[!is.na(berenis_cats$Zielgroesse)]),
-                                #               selected = getDetailsText(filteredData(), "cat_targetDimension")),
-                                #   
-                                #   selectInput("inputDuration", i18n$t("Exposition Duration"),
-                                #               choices = c(NA, berenis_cats$Wirkungsdauer[!is.na(berenis_cats$Wirkungsdauer)]),
-                                #               selected = getDetailsText(filteredData(), "cat_duration")),
-                                #   
-                                #   actionButton("saveData", "Speichern")
-                                # 
-                                # )
                          )
                        )
                        
@@ -531,32 +303,7 @@ server <- function(input, output, session) {
     updateTabsetPanel(session, "inTabset", selected = "detailsTab")
     # detailsStatus$result <- "on"
   })
-  
-  
-  
-  # # -------- ** Event - Save data --------
-  # 
-  # observeEvent(input$saveData, {
-  #   
-  #   id <- getDetailsText(filteredData(), "ID")
-  #   
-  #   # overwrite selected categories in the data_frame
-  #   berenis_updated$df$cat_studyTypeSimple[id] <- input$inputStudyType
-  #   berenis_updated$df$cat_freqRangeSimple[id] <- input$inputFreqRangeSimple
-  #   
-  #   berenis_updated$df$cat_freqRange[id] <- input$inputFreqRange
-  #   berenis_updated$df$cat_source[id] <- input$inputSourceType
-  #   berenis_updated$df$cat_studyObject[id] <- input$inputStudyObject
-  #   berenis_updated$df$cat_targetDimension[id] <- input$inputTargetDimension
-  #   berenis_updated$df$cat_duration[id] <- input$inputDuration
-  #   
-  #   write_excel_csv(berenis_updated$df, file = paste0("data/output/BERENIS_data_categorized_", format(Sys.time(), "%Y-%m-%d_%H%M%S") ,".csv"), delim = ";")
-  #   
-  #   # Write data to file
-  #   #openxlsx::write.xlsx(berenis_updated$df[,-2], file = "data/BERENIS_data_Ver2.xlsx", sheetName = "")
-  # })
-  
-  
+
   # -------- ** Event - Select "Studies-Tab" --------
   
   # remove Details-Tab when the Studies-Tab is selected
@@ -566,51 +313,6 @@ server <- function(input, output, session) {
     }
     # detailsStatus$result <- "off"
   })
-  
-
-# listenToSimpleSearch <- reactive({
-#   list(input$pickerFreqRangeSimple,
-#        input$pickerStudyTypeSimple)
-# })
-# 
-# listenToDetailedSearch <- reactive({
-#   list(input$pickerDuration,
-#        input$pickerTargetDim,
-#        input$pickerNLissue,
-#        input$sliderYear,
-#        input$pickerFreqRange,
-#        input$pickerSource,
-#        input$pickerStudyType,
-#        input$pickerStudyObject)
-# })
-# 
-
-
-  
-# observeEvent(input$pickerFreqRangeSimple, {  
-# #observeEvent(listenToSimpleSearch(), {
-#   berenis2 <- berenis[berenis$cat_freqRangeSimple %in% input$pickerFreqRangeSimple, ]
-#   
-#   disabled_choices <- !rownames(berenis) %in% rownames(berenis2)
-# 
-#   updatePickerInput(session = session, "pickerFreqRangeSimple",
-#                     selected = input$pickerFreqRangeSimple,
-#                     choices = berenis_cats$Frequenzbereich_simple[!is.na(berenis_cats$Frequenzbereich_simple)],
-#                     choicesOpt = list(
-#                       disabled = disabled_choices,
-#                       style = ifelse(disabled_choices,
-#                                      yes = "color: rgba(119, 119, 119, 0.5);",
-#                                      no = ""),
-#                       content = choicesWithCount(filteredData(), "cat_freqRangeSimple", berenis_cats$Frequenzbereich_simple[!is.na(berenis_cats$Frequenzbereich_simple)], TRUE)))
-# 
-#   # updatePickerInput(session = session, "pickerStudyTypeSimple",
-#   #                   choices = berenis_cats$Studientyp_simple[!is.na(berenis_cats$Studientyp_simple)],
-#   #                   choicesOpt = list(content = choicesWithCount(filteredData(), "cat_studyTypeSimple", berenis_cats$Studientyp_simple[!is.na(berenis_cats$Studientyp_simple)], TRUE)))
-# })
-  
-  
-  # 
-  
   
   # reset all pickerInputs, when "searching option" changes from "simple" to "detailed" or vice versa
   observeEvent(input$swDetailed, {
@@ -660,22 +362,6 @@ server <- function(input, output, session) {
                        
                        fluidRow(
                          
-                         # Detailed search switch - Version 1
-                         # switchInput(
-                         #   inputId = "swDetailed",
-                         #   label = i18n$t("Detailed Search"),
-                         #   value = FALSE,
-                         #   onLabel = i18n$t("ON"),
-                         #   offLabel = i18n$t("OFF"),
-                         #   inline = FALSE,
-                         #   size = 'small',
-                         #   onStatus = 'info',
-                         #   offStatus = 'danger',
-                         #   labelWidth = '160px',
-                         #   handleWidth  = '80px',
-                         #   width = "240px"
-                         # )
-                         
                          # Detailed search switch - Version 2
                          materialSwitch(
                            inputId = "swDetailed",
@@ -684,9 +370,7 @@ server <- function(input, output, session) {
                            right = F
                          )
                        ),
-                       
-                       
-                       
+
                        #  -------- ****** Sidebar - Simple Filter Panel --------
                        
                        # if detailed search is off ....
@@ -724,7 +408,6 @@ server <- function(input, output, session) {
                          # ... add simple study type filter
                          pickerInput("pickerStudyTypeSimple", 
                                      label = i18n$t("Study type"),
-                                     # choices = berenis_cats$Studientyp_simple[!is.na(berenis_cats$Studientyp_simple)],
                                      choices =  berenis_catsDict %>% filter(Kategorie == "Studientyp_einfach") %>% dplyr::select("DE") %>% pull("DE"),
                                      choicesOpt = list(
                                        content = choicesWithCount_V2(
@@ -1047,10 +730,6 @@ server <- function(input, output, session) {
   # -------- ** OUTPUT - data table -------- 
   
   output$table <- DT::renderDataTable(dt())
-    
-    # server = FALSE, # test download buttons
-    # expr = 
-  
   
   # build data table as a reactive variable 
   dt <- reactive(
@@ -1106,58 +785,6 @@ server <- function(input, output, session) {
     )
     
   )
-  
-  # output$table <- DT::renderDataTable(
-  #   
-  #   # server = FALSE, # test download buttons
-  #   # expr = 
-  #     {
-  #   
-  #   # import data into local variable
-  #   data <- filteredData() %>% 
-  #     # only select some columns for the datatable 
-  #     select(details, OA_authors, Authors_EtAl, OA_year, OA_title,
-  #            DE_title, DE_summary, FR_title, FR_summary, EN_title, EN_summary, 
-  #            cat_freqRangeSimple, cat_source,	cat_studyTypeSimple, cat_studyObject, cat_duration, cat_targetDimension, 
-  #            NL_issue, NL_date, NL_date_label, 
-  #            title_byLang, NL_DL_link) 
-  # 
-  #   # create the dataTable object
-  #   dt <- DT::datatable(data, # %>% rename(!!details_text:=details)), # use !! and := to inject variable as text
-  #                 escape = FALSE, # needed in order to transform URLs into hyperlinks
-  #                 #filter = 'top', # add filters above each column
-  #                 extensions = c('RowGroup', 'ColReorder', 'Scroller'),
-  #                 selection = 'none',  # args for ColRecorder
-  #                 colnames=c(i18n$t("Details"), "Author(s)", i18n$t("Author(s)"), i18n$t("Year"), i18n$t("Title"), 
-  #                            "DE_title", "DE_summary", "FR_title", "FR_summary", "EN_title", "EN_summary",
-  #                            "Frequency Range", "Exposition Source", "Study Type","Study Object", "Duration", "Target Dimension", 
-  #                            i18n$t("Newsletter Issue"), "Newsletter Date", i18n$t("Newsletter Date"), 
-  #                            i18n$t("Newsletter Study Title"), i18n$t("Newsletter Download")),
-  #                 rownames = FALSE,
-  #                 options = list(language = list(search = i18n$t('Search Newsletters:')),
-  #                                #filter = list('float' = "left", 'text-align' = "left"),
-  #                                #rowGroup = list(dataSrc = 4), # args for RowGroup
-  #                                order = list(list(17, 'desc')),
-  #                                colReorder = TRUE, # args for ColRecorder
-  #                                bPaginate = FALSE, # arg for filter
-  #                                list(deferRender = TRUE, # args for Scroller
-  #                                     scrollY = 200,
-  #                                     scroller = TRUE),
-  #                                columnDefs = list(
-  #                                  list(targets = c(1,5:16,18), visible = FALSE),
-  #                                  list(className = 'dt-center', targets = c(0,21)))
-  #                                # # for the NL download buttons
-  #                                #   preDrawCallback = JS('function() { Shiny.unbindAll(this.api().table().node()); }'),
-  #                                #   drawCallback = JS('function() { Shiny.bindAll(this.api().table().node()); } ')
-  #                                )
-  #                 )
-  #   
-  #   
-  #       
-  #   return(dt)
-  #   
-  # })
-  # 
   
   # -------- ** OUTPUT - Text -------- 
   
@@ -1320,21 +947,4 @@ server <- function(input, output, session) {
       hc_add_theme(ber)
     
   })
-
-  # -------- **** Impressum Map with location of SwissTPH  -------- 
-  # output$map <- renderLeaflet({
-  #   leaflet() %>%
-  #     addTiles() %>%  
-  #     addMarkers(lng=7.57753, lat=47.55636, popup="BERENIS") %>% 
-  #     setView(lng=7.57753, lat=47.55636, zoom = 14)
-  # })
-  
-  
-  # language settings for datatable see: https://rstudio.github.io/DT/004-i18n.html
-
-  
-  # ---- for later use --- highcharts map of switzerland (see https://www.datacamp.com/community/tutorials/data-visualization-highcharter-r)
-  # hcmap("https://code.highcharts.com/mapdata/countries/ch/ch-all.js")%>%
-  #   hc_title(text = "Switzerland")
-  # 
 }
