@@ -2,31 +2,6 @@
 #---- Libs & Functions ----
 #**************************
 
-# import packages
-library(shiny)
-library(shinyWidgets)
-library(shinythemes)
-library(DT)
-library(readxl)
-library(highcharter)
-library(htmltools)
-library(tidyverse)
-library(shinydashboard)
-library(shinydashboardPlus)
-library(shinyjs)
-library(shiny.i18n) # see https://github.com/Appsilon/shiny.i18n
-library(mailtoR)
-library(leaflet)
-library(httr)
-library(gtools)
-library(data.table)
-# library(bslib)
-#library(shinybrowser)
-#library(datacleanr)
-#library(shiny.semantic)
-#library(rsconnect)
-
-
 # *********************************
 # ----------- SHINY UI ------------
 # *********************************
@@ -279,27 +254,7 @@ ui <-
                            )
                        )
   ),
-  # tags$script("
-  #   Shiny.addCustomMessageHandler('resetValue', function(variableName) {
-  #     Shiny.onInputChange(variableName, null);
-  #   });"
-  # ),
-              
-                
-  # # language selector
-  # shiny.i18n::usei18n(i18n),
-  # div(style = "float: right;",
-  #     selectInput('selected_language',
-  #                 i18n$t("Change language"),
-  #                 choices = i18n$get_languages(),
-  #                 selected = i18n$get_key_translation())
-  # ),
- 
-  
-  # # Tooltips for the details buttons
-  # tippy_class("details_tooltip", content = "Click on the 'Details' button in this column to get detailed information a particular study and its evaluation by BERENIS"),
 
-  
   # *******************************----
   # ---- NavBar Menu - Title Panel ----  
   
@@ -326,59 +281,6 @@ ui <-
              uiOutput("explorerTab")
              
     ),
-    
-    
-    # *******************************************----
-    # -------- Navbar Menu - Study Statistics --------
-    
-    ## ACHTUNG:  NLcum hat auf shinyapps.io einen Darstellungsfehler, der in der lokalen R-Umgebung nicht auftritt.
-    ##           Debugging bisher erfolglos. Fehlerquelle unbekannt.
-    ##           Daher die Entscheidung, generell auf den Tab zu verzichten. 
-    
-    # tabPanel(title = i18n$t("Study Statistics"), icon = icon("chart-line"),
-    #          
-    #          # -- BERENIS study stats
-    #          fluidRow(
-    #            
-    #            infoBox(title = "",
-    #                    subtitle = i18n$t("Total studies screened by BERENIS"), 
-    #                    value = tags$div(sum(berenis_stats$studies_identified, na.rm = TRUE), style = "font-size: 180%;"),
-    #                    icon = icon("microscope", lib="font-awesome"), 
-    #                    color = "yellow",
-    #                    fill = TRUE),
-    #            
-    #            infoBox(title = "",
-    #                    subtitle = i18n$t("Studies discussed in depth by BERENIS"), 
-    #                    value = tags$div(sum(berenis_stats$studies_discussed, na.rm = TRUE), style = "font-size: 180%;"),
-    #                    icon = icon("comments"), 
-    #                    color = "aqua",
-    #                    fill = TRUE),
-    #            
-    #            infoBox(title = "",
-    #                    subtitle = i18n$t("Studies presented in BERENIS Newsletter"), 
-    #                    value = tags$div(sum((berenis_stats$studies_selected + berenis_stats$studies_additional), na.rm = TRUE), style = "font-size: 180%;"),
-    #                    icon = shiny::icon("file-alt", lib="font-awesome"), 
-    #                    color = "maroon",
-    #                    fill = TRUE)
-    #          ),
-    #          
-    #          # -- Study Timeline and Newsletter Timeline
-    #          fluidRow(
-    #            column(5, highchartOutput("NLcum", height = "500px")),
-    #            column(7, highchartOutput("NLstatistics", height = "500px"))
-    #          )
-    #          
-    #          # Schweizerische Eidgenossenschaft
-    #          #   Eidgenoessisches Department fuer Umwelt,
-    #          #   Verkehr, Energie und Kommunikation (UVEK)
-    #          # 
-    #          #   Bundesamt fuer Umwelt (BAFU)
-    #          #   Abteilung Laerm und NIS
-    #          #   Sektion NIS")
-    #          # ), cellArgs = list(style = "horizontal-align: center")
-    # ),
-    
-    
     
     # *******************************************----
     # -------- Navbar Menu - About BERENIS --------
@@ -573,20 +475,7 @@ ui <-
                           )
                         ),
                         
-                        
-                        # # --------- fixed bottom Panel - Impressum -----------
-                        # absolutePanel(
-                        #   bottom = 0, left = 0, right = 0, height = "50px",
-                        #   fixed = TRUE,
-                        #   fixedRow(column(12, HTML('&emsp;'), span("powered by", style = "display:inline"), HTML('&emsp;'),
-                        #                   tags$img(src = "SchweizerischeEidgenossenschaft_und_BAFU_logo_40px.png", style = "padding: 5px;")),
-                        #            style="border-top: 1px solid #CCC; background: white; color: black; text-align: right"),
-                        # ),
                ),
-               
-               # tabPanel("Organisation",
-               #          highchartOutput("Organigram", height = "800px", width = "800px"),
-               #          cellArgs = list(style = "horizontal-align: center")),
                
                
                # -------- ** Menu Tab Panel - Study Selection --------
@@ -699,14 +588,7 @@ ui <-
                           )
                           
                         ),
-                        # # --------- fixed bottom Panel - Impressum -----------
-                        # absolutePanel(
-                        #   bottom = 0, left = 0, right = 0, height = "50px",
-                        #   fixed = TRUE,
-                        #   fixedRow(column(12, HTML('&emsp;'), span("powered by", style = "display:inline"), HTML('&emsp;'),
-                        #                   tags$img(src = "SchweizerischeEidgenossenschaft_und_BAFU_logo_40px.png", style = "padding: 5px;")),
-                        #            style="border-top: 1px solid #CCC; background: white; color: black; text-align: right"),
-                        # ),
+
                ),
                
                
@@ -798,10 +680,6 @@ ui <-
                                      " au secrétariat scientifique de BERENIS."
                                  )
                           )
-                                 
-                          # column(width = 7,
-                          #        leafletOutput("map", height = 420)
-                          # )
                         
                         ), # END - fluidRow
                         
@@ -824,103 +702,6 @@ ui <-
                
                
     ),
-    # *******************************************----
-    # -------- Navbar Menu - Temporary Beta-Version --------
-    
-    # tabPanel(value = "idBetaVersion", title = i18n$t("Beta Version (Juni 2022)"), icon = icon("hammer", lib = "font-awesome"), 
-    #          
-    #          fluidRow(
-    #            
-    #            # column(width = 2), 
-    #            column(width = 12, 
-    #                   
-    #                   conditionalPanel(
-    #                     
-    #                     condition = "input.langPicker == 'EN'",
-    # 
-    #                     wellPanel( 
-    #                       h3(i18n$t("Beta Version (Juni 2022)"), style ="font-weight: bold;"),  
-    #                       
-    #                       p("The current beta version of the web app is running with the following known limitations:"),
-    #                       tags$ul(
-    #                         tags$li("Currently, only about 1/3 of the studies are fully categorized by topic. The non-categorized studies are not yet found via the 'Detailed search' of the data filter but are contained and searchable in the application."),
-    #                         tags$li("In case of high usage with many simultaneous users, performance restrictions may occur.")), 
-    #                       p("The BERENIS scientific office will be happy to receive your suggestions for improving the web application by ",
-    #                         mailtoR(email = "stefan.dongus@swisstph.ch",
-    #                                 text = "e-mail",
-    #                                 subject = "Feedback on the BERENIS-Newsletter WebApp"), ".")
-    #                     )
-    #                   ),
-    #                   
-    #                   conditionalPanel(
-    #                     
-    #                     condition = "input.langPicker == 'DE'",
-    #                     
-    #                     wellPanel( 
-    #                       h3(i18n$t("Beta Version (Juni 2022)"), style ="font-weight: bold;"),
-    #                       
-    #                       p("Die aktuelle Beta-Version der Web-App wird noch mit den folgenden bekannten Einschränkungen betrieben:"),
-    #                       tags$ul(
-    #                         tags$li("Aktuell sind nur etwa 1/3 der Studien vollständig für die Detailsuche kategorisiert. Die nichtkatergorisierten Studien werden über die 'Detailsuche' des Datenfilters noch nicht gefunden, sind aber in der App enthalten."),
-    #                         tags$li("Bei hohem Nutzungsaufkommen mit vielen gleichzeitigen Zugriffen auf die App kann es zu Performance-Einschränkungen kommen.")), 
-    #                       p("Anregungen zur Verbesserung der WebApp nimmt das wissenschaftliche Sekretariat von BERENIS gern per ",
-    #                         mailtoR(email = "stefan.dongus@swisstph.ch",
-    #                                 text = "E-Mail",
-    #                                 subject = "Anregung zur BERENIS-Newsletter WebApp"), " entgegen.")
-    #                     )
-    #                   ),
-    #                     
-    #                   conditionalPanel(
-    #                     
-    #                     condition = "input.langPicker == 'FR'",
-    #                     
-    #                     wellPanel( 
-    #                       h3(i18n$t("Beta Version (Juni 2022)"), style ="font-weight: bold;"),  
-    #                       
-    #                       p("La version bêta de l'application web fonctionne actuellement avec les manquements suivants:"),
-    #                       tags$ul(
-    #                         tags$li("Seul environ 1/3 des études sont entièrement catégorisées pour la recherche détaillée. Les études non catégorisées ne sont pas encore affichées par la 'recherche détaillée' mais sont présentes dans l’application et peuvent être trouvées lors d’une recherche générale."),
-    #                         tags$li("En cas de forte utilisation avec de nombreux accès simultanés à l'application, des restrictions de performance peuvent survenir.")), 
-    #                       p("Si vous avez des suggestions pour améliorer l’application, vous pouvez les envoyez au secrétariat scientifique de BERENIS par ",
-    #                         mailtoR(email = "stefan.dongus@swisstph.ch",
-    #                                 text = "courriel",
-    #                                 subject = "Suggestions concernant la newsletter BERENIS Web App"), ".")
-    #                     )
-    #                   )
-    #            ),
-    #            # column(width = 2),
-    #          )
-    # ),
-    
-    # *******************************************----
-    # -------- Navbar Menu - Language Picker --------
-    
-    # language input --> trick: set an id for the input in order to style it manually --> see top 
-    # inputs = div(id = "langDiv", style = "align:right;",
-    #              pickerInput(
-    #                inputId = "langPicker",
-    #                label = "",
-    #                choices = i18n$get_languages(),
-    #                #selected = i18n$get_key_translation(),
-    #                selected = "DE",
-    #                width = "fit",
-    #                choicesOpt = list(content = flags$img,
-    #                                  style = rep(("background: #112446;"), length(flags$lang))),
-    #                options = pickerOptions(style = "btn btn-primary"))
-    #              ),
-    # 
-    # nav_spacer(),
-    # nav_item(
-    #   # inputs = radioGroupButtons(inputId = "langPicker",
-    #   radioGroupButtons(inputId = "langPicker",
-    #                     label = "",
-    #                     choices = i18n$get_languages(),
-    #                     #selected = i18n$get_key_translation(),
-    #                     selected = "DE",
-    #                     size = "sm",
-    #                     status = "btn btn-primary"), 
-    #   align = "right"
-    
     
     header = tags$div(
       style = "position: absolute; right: 20px; top: 15px; z-index: 9999;",
@@ -936,16 +717,4 @@ ui <-
       )
     )
   )
-    
-  #   # -- old implementation with custom form "navbarPageWithInputs" --> not working anymore (ERS/2025-07-29)
-  #   inputs = radioGroupButtons(inputId = "langPicker",
-  #                              label = "",
-  #                              choices = i18n$get_languages(),
-  #                              #selected = i18n$get_key_translation(),
-  #                              selected = "DE",
-  #                              size = "sm",
-  #                              status = "btn btn-primary"
-  #   )
-  # )
 )
-# )

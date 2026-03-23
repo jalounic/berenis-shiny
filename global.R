@@ -1,10 +1,9 @@
 #**************************
 #---- Libs & Functions ----
 #**************************
-
+# import packages
 
 # .libPaths("C:\\Users\\Z70ASEG\\AppData\\Local\\R\\win-library\\4.4")
-
 
 # import packages
 library(shiny)
@@ -12,26 +11,17 @@ library(shinyWidgets)
 library(shinythemes)
 library(DT)
 library(readxl)
-library(highcharter)
+library(highcharter) #crashes -> data.table
 library(htmltools)
-library(tidyverse)
+library(tidyverse) #crashes -> data.table
 library(shinydashboard)
 library(shinydashboardPlus)
 library(shinyjs)
 library(shiny.i18n) # see https://github.com/Appsilon/shiny.i18n
 library(mailtoR)
-library(leaflet)
 library(httr)
 library(gtools)
 library(data.table)
-#library(shinybrowser)
-#library(datacleanr)
-#library(bslib)
-#library(shiny.semantic)
-#library(rsconnect)
-# thematic::thematic_shiny(font = "auto")
-
-
 
 
 # function for creating links from URLs in string format
@@ -49,24 +39,6 @@ createLink <- function(url, buttonTxt, class = "downloadButton") {
 }
 
 
-# # function to insert the language dropdown on the right side of the navigation bar
-# navbarPageWithInputs <- function(..., inputs) {
-#   navbar <- navbarPage(...)
-#   form <- tags$form(
-#     class = "navbar-nav ml-auto navbar-right",
-#     # navbar navbar-expand-lg
-#     #class = "navbar-nav",
-#     #class = "navbar-form",
-#     id = "berenisNavbar",
-#     align = "right",
-#     inputs)
-#   navbar[[4]][[1]][[1]]$children[[1]]$children[[2]] <- htmltools::tagAppendChild(navbar[[4]][[1]][[1]]$children[[1]]$children[[2]], form)
-#   return(navbar)
-# }
-
-
-
-
 # function to abbreviate an author list with " et al." 
 abbreviate_authors <- function(authors){
   
@@ -82,23 +54,6 @@ abbreviate_authors <- function(authors){
   return(authors)
   
 }
-
-
-# translate <- function(activeLang, entxt, detxt=NULL, frtxt=NULL) {
-#   if (activeLang == "EN") {
-#     return(entxt)
-#     
-#   } else if (activeLang == "DE") {
-#     if (is.NULL(detxt)) {return(entxt)} else {return(detxt)}
-#     
-#   } else if (activeLang == "FR") {
-#     if (is.NULL(frtxt)) {return(entxt)} else {return(frtxt)}
-#     
-#   } else {
-#     return(NULL)
-#   }
-# }
-
 
 monthByLang <- data.frame(
   "DE" = c("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"),
@@ -169,8 +124,6 @@ choicesWithCount <- function(data, var, choices, labels=NULL, rm.na=FALSE) {
 
 # ---- add counts to items in a list of choices -----
 
-#choices <- berenis_catsDict %>% filter(Kategorie == "Zielgroesse") %>% select("DE") %>% t() %>% as.vector()
-
 choicesWithCount_V2 <- function(data, cat, choices, labels = NULL, rm.na = FALSE, int_as_str = FALSE) {
   
   # detect parentheses and add \\ before, in order to make str_detect work
@@ -221,68 +174,15 @@ ber <- hc_theme(#colors = c('red','green','blue'),
 #---- Main ----
 #**************
 
-# --- for debugging ---
-# setwd("E:\\CODING\\BAFU_BERENIS_APP")
-# --- debugging end ---
-
-
-# set excel file with the data
-berenis_datafile <- "data/BERENIS_data_for_shiny_app.xlsx"
-
 # # import dictionaries with translations
 i18n <- Translator$new(translation_json_path = "data/Dictionaries/translation.json")
 i18n$set_translation_language("EN") # select the default translation to display
 
-
+berenis_datafile <- "data/BERENIS_data.xlsx"
 # ---- LOAD BERENIS DATA ---- 
-# berenis <- as.data.frame(read_excel(path = berenis_datafile, sheet = 1, na = c("", "NA"))) # DATA
-berenis <- read.csv("https://lite.framacalc.org/berenis-a1ho.csv", encoding = "UTF-8") # DATA from Framacalc
-# berenis <- berenis[complete.cases(berenis[,1:32]),] # temporary - removes incomplete rows 
+berenis <- as.data.frame(read_excel(path = berenis_datafile, sheet = 1, na = c("", "NA"))) # DATA
+#berenis <- read.csv("https://lite.framacalc.org/berenis-a1ho.csv", encoding = "UTF-8") # DATA from Framacalc
 berenis_catsDict <- as.data.frame(read_excel(path = berenis_datafile, sheet = 2, na = "NA")) # CATEGORIES
-# berenis_stats <- as.data.frame(read_excel(path = "data/BERENIS_data_Ver2.xlsx", sheet = 3, na = "NA")) # STATS --> not wanted by the group :-(
-
-
-
-# # build a data frame that holds the languages and corresponding flags
-# flags <- data.frame(lang=c("EN", "DE", "FR"))
-# flags$img = c(sprintf("<img src='flags/gb.png' width=30px><span class='jhr'>%s</span></img>", flags$lang[1]),
-#               sprintf("<img src='flags/de.png' width=30px><span class='jhr'>%s</span></img>", flags$lang[2]),
-#               sprintf("<img src='flags/fr.png' width=30px><span class='jhr'>%s</span></img>", flags$lang[3])
-# )
-
-
-# # explore new data from SwissTPH
-# berenis_new <- tibble(read_excel(path = "data/BERENIS_data_for_shiny_app.xlsx", sheet = 1, na = ""))
-# all_kats <- berenis %>% dplyr::select(Kat_Studientyp:Kat_Zielgrösse) %>% lapply(., unique)
-# 
-# # ---- manual Replacements ----
-# # ", " & "," --> "/" oder "|"
-# # z.B. und (...) ???
-# 
-# all_kats <- all_kats %>%
-#   # Zielgrösse
-#   # map( .f = str_replace_all, pattern = "Nicht bestimmt", replacement = "andere") %>%
-#   # map( .f = str_replace_all, pattern = "nicht bestimmt", replacement = "andere") %>%
-#   map( .f = str_replace_all, pattern = "Studien", replacement = "Studie") %>% # Studien --> Studie
-#   map( .f = str_replace_all, pattern = "studien", replacement = "studie") %>% # studien --> studie
-#   map( .f = str_replace_all, pattern = "unspezifisch", replacement = "Unspezifisch") %>% # Unspezifisch --> unspezifisch
-#   # map( .f = str_replace_all, pattern = "/", replacement = " | ") %>% # "/" -->  "|"
-#   # map( .f = str_replace_all, pattern = "Ratten,Mäuse", replacement = "Ratten | Mäuse") %>% # "/" -->  "|"
-#   map( .f = str_replace_na, replacement = "NA") %>% map( .f = str_replace_all, pattern = "^NA$", replacement = "Andere") # "/" -->  "|"
-# 
-# all_kats
-# 
-# # find unique values
-# unique_kats <- all_kats %>% map( .f = str_split, pattern =";") %>% map(.f = unlist) %>% map(.f = str_trim) %>% map( .f = unique) %>% map( .f = sort)
-
-# # convert into data frame and write to Excel
-# xx <- lapply(unique_kats, unlist)
-# max <- max(sapply(xx, length))
-# unique_kats_df <- do.call(cbind, lapply(xx, function(z)c(z, rep(NA, max-length(z)))))
-# writexl::write_xlsx(as.data.frame(unique_kats_df), "data/BERENIS_kats.xlsx")
-
-
-
 
 # overwrite German column names
 names(berenis) <- c(
@@ -301,8 +201,6 @@ names(berenis) <- c(
   # dunkelgrün [6]
   "cat_freqRange", "cat_source", "cat_studyType", "cat_studyObject", "cat_duration", "cat_targetDimension", "addInfos"
   )
-
-
 
 
 # ---- BERENIS Dataframe ----
@@ -351,42 +249,3 @@ berenis_stats <- mutate(berenis_stats,
                         csum_ident = cumsum(studies_identified), 
                         csum_disc = cumsum(studies_discussed),
                         csum_select = cumsum(studies_selected + studies_additional))
-
-
-
-# # calculate median and number of observations
-# rf_data_meds <- ddply(rf_data, .(get(myvar), Umgebung), summarize, 
-#                       med = median(Total, na.rm=T),
-#                       mean = mean(Total, na.rm=T),
-#                       min = min(Total, na.rm=T),
-#                       max = max(Total, na.rm=T),
-#                       n = length(Total))
-# names(rf_data_meds)[names(rf_data_meds)=="get(myvar)"] <- myvar
-
-
-
-#sts <- head(reshape2::melt(data=berenis_stats, id=1:5, variable.name = "studies_cat", value.name = "studies_nr"))
-
-
-# tot <- summarize(berenis_stats, 
-#           studies_identified = sum(studies_identified, na.rm = TRUE),
-#           studies_discussed = sum(studies_discussed, na.rm = TRUE),
-#           studies_selected = sum(studies_selected, na.rm = TRUE))
-# 
-# 
-# highchart() %>% 
-#   hc_chart(plotBackgroundColor = NULL,
-#            plotBackgroundImage = NULL,
-#            plotBorderWidth = 0,
-#            plotShadow = FALSE) %>%
-#   hc_title(text = paste0("<b>", tot$studies_identified, "</b> studies screened in total")) %>%
-#   hc_pane(#center = c('50%', '80%'), size = '140%',
-#           startAngle = -90, endAngle = 90, 
-#           background = list(#backgroundColor = list("Highcharts.defaultOptions.legend.backgroundColor || '#ffffff'"),
-#                             innerRadius = '60%',
-#                             outerRadius = '100%',
-#                             shape = 'arc')) %>% 
-#   hc_add_series(data = tot$studies_identified, type = "solidgauge", dataLabels = format('<div style="text-align:center"><span style="font-size:25px">{point.y}</span><br/><span style="font-size:12px;opacity:0.4">km/h</span></div>'))  %>%
-#   hc_yAxis(min = 0, max = max(tot), lineWidth = 0, tickWidth = 0, minorTickInterval = 0, labels = 0, series = list(color = "#611530", data = data)) %>%
-#   hc_tooltip(enabled = FALSE)
-#   #hc_plotOptions(solidgauge = list(dataLabels = list(y=5, borderWidth = 0, useHTML = TRUE))) %>%
