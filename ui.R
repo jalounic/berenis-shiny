@@ -20,7 +20,6 @@ ui <-
   shiny.i18n::usei18n(i18n),
   
   # use shinydashboard elements within regular shiny app
-  useShinydashboard(),
   useShinyjs(),
   
   # ---- CSS style modifications ----              

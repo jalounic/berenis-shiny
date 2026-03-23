@@ -1,28 +1,18 @@
 #**************************
 #---- Libs & Functions ----
 #**************************
-# import packages
-
-# .libPaths("C:\\Users\\Z70ASEG\\AppData\\Local\\R\\win-library\\4.4")
 
 # import packages
-library(shiny)
-library(shinyWidgets)
-library(shinythemes)
-library(DT)
-library(readxl)
-library(highcharter) #crashes -> data.table
-library(htmltools)
-library(tidyverse) #crashes -> data.table
-library(shinydashboard)
-library(shinydashboardPlus)
-library(shinyjs)
-library(shiny.i18n) # see https://github.com/Appsilon/shiny.i18n
+library(shiny) # yes
+library(shinyWidgets) #yes
+library(shinythemes) #yes
+library(DT) # yes
+library(readxl) #yes
+library(highcharter) #yes
+library(tidyverse) # i'll allow it here
+library(shinyjs) #yes
+library(shiny.i18n) # yes, see https://github.com/Appsilon/shiny.i18n
 library(mailtoR)
-library(httr)
-library(gtools)
-library(data.table)
-
 
 # function for creating links from URLs in string format
 createLink <- function(url, buttonTxt, class = "downloadButton") {
@@ -41,7 +31,6 @@ createLink <- function(url, buttonTxt, class = "downloadButton") {
 
 # function to abbreviate an author list with " et al." 
 abbreviate_authors <- function(authors){
-  
   # split authors by ","
   authors_list <- str_split(authors, ",")
   # count authors
