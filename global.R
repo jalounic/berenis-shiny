@@ -11,9 +11,9 @@ library(shinyWidgets)
 library(shinythemes)
 library(DT)
 library(readxl)
-library(highcharter)
+library(highcharter) #crashes -> data.table
 library(htmltools)
-library(tidyverse)
+library(tidyverse) #crashes -> data.table
 library(shinydashboard)
 library(shinydashboardPlus)
 library(shinyjs)
@@ -178,10 +178,10 @@ ber <- hc_theme(#colors = c('red','green','blue'),
 i18n <- Translator$new(translation_json_path = "data/Dictionaries/translation.json")
 i18n$set_translation_language("EN") # select the default translation to display
 
-
+berenis_datafile <- "data/BERENIS_data.xlsx"
 # ---- LOAD BERENIS DATA ---- 
-# berenis <- as.data.frame(read_excel(path = berenis_datafile, sheet = 1, na = c("", "NA"))) # DATA
-berenis <- read.csv("https://lite.framacalc.org/berenis-a1ho.csv", encoding = "UTF-8") # DATA from Framacalc
+berenis <- as.data.frame(read_excel(path = berenis_datafile, sheet = 1, na = c("", "NA"))) # DATA
+#berenis <- read.csv("https://lite.framacalc.org/berenis-a1ho.csv", encoding = "UTF-8") # DATA from Framacalc
 berenis_catsDict <- as.data.frame(read_excel(path = berenis_datafile, sheet = 2, na = "NA")) # CATEGORIES
 
 # overwrite German column names
